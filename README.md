@@ -3,9 +3,65 @@
 Classify bios/comments into personas (Student, Tech, Religious, Fitness, Job-seeker, Creator, Business, Other) and generate an aggregate report.  
 **No scraping**. Works with official Instagram Graph API data you’re allowed to fetch (audience insights, commenters/likers on your media) or CSV uploads collected **with consent**.
 
+Analyze your Instagram audience personas 
+Built with Python · FastAPI · Chart.js · CSV Upload · Docker-ready.
+Just clone → install → run → see charts in your browser 🚀
+
 
 After following the web api will be running on 
 http://127.0.0.1:8000/ui
+
+
+git clone https://github.com/perryvegehan/INSTA_AUDIENCE_ANALYSER.git
+cd INSTA_AUDIENCE_ANALYSER
+
+macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+Windows (PowerShell)
+python -m venv .venv
+.venv\Scripts\Activate
+pip install -r requirements.txt
+
+
+Run the Demo (no Instagram needed)
+python -m scripts.demo_classify     # Creates data/report.json with audience categories (students, tech, fitness, etc.).
+
+uvicorn app.main:app --reload --port 8000
+
+Open in your browser:
+
+API docs: http://127.0.0.1:8000/docs
+
+Web UI: http://127.0.0.1:8000/ui
+
+👉 In the Web UI:
+
+Click “Load Demo Data” to see sample charts.
+
+Or Upload a CSV with columns id,bio.
+example csv
+id,bio
+user1,B.Tech CSE | Learning DSA and ML
+user2,Gym Trainer | Calisthenics
+user3,Entrepreneur | Startup founder | Ecommerce
+
+
+Customize Personas
+Edit app/classifier.py → update keywords inside BUCKETS.
+Restart the server to apply changes.
+
+Run with Docker (optional)
+docker build -t insta-audience .
+docker run --rm -p 8000:8000 insta-audience
+
+Then open http://127.0.0.1:8000/ui
+
+
+
+Once you are here and understand the code and the working, proceed to add instagram apis and advance the project.
 
 
 ---
