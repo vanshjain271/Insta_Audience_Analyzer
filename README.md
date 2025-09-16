@@ -3,6 +3,11 @@
 Classify bios/comments into personas (Student, Tech, Religious, Fitness, Job-seeker, Creator, Business, Other) and generate an aggregate report.  
 **No scraping**. Works with official Instagram Graph API data you’re allowed to fetch (audience insights, commenters/likers on your media) or CSV uploads collected **with consent**.
 
+
+After following the web api will be running on 
+http://127.0.0.1:8000/ui
+
+
 ---
 
 ## TL;DR – Clone & Run
