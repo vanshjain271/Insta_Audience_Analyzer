@@ -12,7 +12,6 @@ app = FastAPI(title="Instagram Audience Persona Analyzer", version="0.1.0")
 # Serve the minimal web UI
 app.mount("/ui", StaticFiles(directory="web", html=True), name="web")
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -74,3 +73,13 @@ def demo_report():
         Item(id="u5", text="Software engineer | Backend | DevOps | AWS | Docker | Open source"),
     ]
     return build_report(demo)
+
+# update root to show available endpoints
+@app.get("/")
+def root():
+    return {
+        "message": "Insta Audience Analyzer is running!",
+        "web_ui": "/ui",
+        "health_check": "/health",
+        "docs": "/docs"
+    }
