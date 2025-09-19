@@ -1,11 +1,14 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
 from typing import List
 from .schemas import ClassifyRequest, ClassifyResponse, ReportResponse, Classified, Item
 from .classifier import classify_text
 from .report import build_report
 from . import ig_api
+from typing import Optional
+import csv, io
 
 app = FastAPI(title="Instagram Audience Persona Analyzer", version="0.1.0")
 
@@ -40,9 +43,6 @@ def classify(req: ClassifyRequest):
 def report(req: ClassifyRequest):
     return build_report(req.items)
 
-from typing import Optional
-import csv, io
-
 @app.post("/report_csv", response_model=ReportResponse)
 async def report_csv(file: UploadFile = File(...)):
     if not file.filename.lower().endswith((".csv")):
@@ -74,12 +74,7 @@ def demo_report():
     ]
     return build_report(demo)
 
-# update root to show available endpoints
+# ⬇️ New route: redirect root (/) to /ui
 @app.get("/")
-def root():
-    return {
-        "message": "Insta Audience Analyzer is running!",
-        "web_ui": "/ui",
-        "health_check": "/health",
-        "docs": "/docs"
-    }
+async def root():
+    return RedirectResponse(url="/ui")
