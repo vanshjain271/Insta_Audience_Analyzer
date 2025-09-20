@@ -7,14 +7,19 @@ from .schemas import ClassifyRequest, ClassifyResponse, ReportResponse, Classifi
 from .classifier import classify_text
 from .report import build_report
 from . import ig_api
-from typing import Optional
 import csv, io
 
 app = FastAPI(title="Instagram Audience Persona Analyzer", version="0.1.0")
 
-# Serve the minimal web UI
+# 🔹 Serve the minimal web UI at /ui
 app.mount("/ui", StaticFiles(directory="web", html=True), name="web")
 
+# 🔹 Redirect root to /ui so you don’t see JSON anymore
+@app.get("/")
+def root():
+    return RedirectResponse(url="/ui")
+
+# Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -58,7 +63,10 @@ async def report_csv(file: UploadFile = File(...)):
             if txt:
                 items.append(Item(id=uid, text=txt))
         if not items:
-            raise HTTPException(status_code=400, detail="No rows with text found. Ensure CSV has columns 'id' and 'bio' or 'text'.")
+            raise HTTPException(
+                status_code=400,
+                detail="No rows with text found. Ensure CSV has columns 'id' and 'bio' or 'text'."
+            )
         return build_report(items)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Could not parse CSV: {e}")
@@ -73,8 +81,3 @@ def demo_report():
         Item(id="u5", text="Software engineer | Backend | DevOps | AWS | Docker | Open source"),
     ]
     return build_report(demo)
-
-# ⬇️ New route: redirect root (/) to /ui
-@app.get("/")
-async def root():
-    return RedirectResponse(url="/ui")
